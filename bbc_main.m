@@ -104,14 +104,18 @@ save rpp
 
 %% Output some results tables
 % "Critical" Bayes factors
-B_crit = log([0 1/10 1/3 3 10 Inf]);
+B_crit = log10([0 1/10 1/3 3 10 Inf]);
 
 load rpp
 
-original   = histc(log(B_ori), B_crit)';  % frequencies for original
-mitigated  = histc(log(B_mit), B_crit)';  % frequencies for mitigated
-replicate  = histc(log(B_rep), B_crit)';  % frequencies for replicate
-transition = hist3(log([B_mit, B_rep]), 'edges', { B_crit B_crit })';
+B_ori = log10(B_ori);
+B_mit = log10(B_mit);
+B_rep = log10(B_rep);
+
+original   = histc(B_ori, B_crit)';  % frequencies for original
+mitigated  = histc(B_mit, B_crit)';  % frequencies for mitigated
+replicate  = histc(B_rep, B_crit)';  % frequencies for replicate
+transition = hist3([B_mit, B_rep], 'edges', { B_crit B_crit })';
 
     % Strip that weird final bin that hist* adds...
     original(end)     = [];
@@ -135,21 +139,18 @@ fprintf ' --------------------------------------------\n'
 
 %% Make plot
 
-load rpp
-
 mark = rppdata(:,end);
 
 nratio = round(100*(rppdata(:,5) ./ rppdata(:,2)));     % sample size ratio
-large = max(abs(log10(B_mit)), abs(log10(B_rep))) > 1;  % find large BFs
+large = max(abs(B_mit), abs(B_rep)) > 1;  % find large BFs
 
 % Plot small-BF studies
-plot(log10(B_mit(~large)), log10(B_rep(~large)), 'kx', ...
-    'MarkerSize', 4, 'LineWidth', 1)
+plot(B_mit(~large), B_rep(~large), 'kx', 'MarkerSize', 4, 'LineWidth', 1)
 hold on
 
 % Plot large-BF studies
-x = log10(B_mit(large));
-y = log10(B_rep(large));
+x = B_mit(large);
+y = B_rep(large);
 s = nratio(large);
 for ctr = 1:sum(large)
     scatter(x(ctr), y(ctr), s(ctr), ...
@@ -164,8 +165,8 @@ scatter(3.5, -1.5, 100, ...
 hold off
 
 % Draw custom grid lines
-set(gca, 'ytick', log10([1/10 1/3 3 10]))
-set(gca, 'xtick', log10([1/10 1/3 3 10]))
+set(gca, 'ytick', B_crit(2:end-1))
+set(gca, 'xtick', B_crit(2:end-1))
 grid on
 set(gca, 'xticklabel', {'1/10' '1/3' '3' '10'})    
 set(gca, 'yticklabel', {'1/10' '1/3' '3' '10'})
