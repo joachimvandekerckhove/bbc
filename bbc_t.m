@@ -86,7 +86,7 @@ if prior(8) > 0
 end
 
 % p(M|t, df) = p(t|df, M) * p(M) / p(t)
-posterior       = evidence .* prior / sum(evidence .* prior);
+posterior       = (evidence / sum(evidence .* prior)) .* prior ;
 
 % pro-HA prior and posterior ratios
 prior_ratio     = sum(prior(1:2:end)) ./ sum(prior(2:2:end));
@@ -94,7 +94,8 @@ posterior_ratio = sum(posterior(1:2:end)) ./ sum(posterior(2:2:end));
 
 % pro-HA Bayes factor
 bayes_factor    = posterior_ratio / prior_ratio;
-% sum(evidence(1:2:end)) ./ sum(evidence(2:2:end))
+
+% sum(prior(1:2:end).*evidence(1:2:end)) / sum(prior(2:2:end).*evidence(2:2:end))
 
 
 %% -- Subroutines ------------------------------------------------------ %%
