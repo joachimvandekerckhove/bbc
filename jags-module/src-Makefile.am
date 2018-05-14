@@ -1,0 +1,12 @@
+SUBDIRS = distributions
+
+jagsmod_LTLIBRARIES = ct.la
+
+ct_la_SOURCES = ct.cc
+
+ct_la_CPPFLAGS = -I$(includedir)/JAGS
+
+ct_la_LIBADD = distributions/ctdist.la
+ct_la_LIBADD += -ljags -ljrmath
+
+ct_la_LDFLAGS = -module -avoid-version

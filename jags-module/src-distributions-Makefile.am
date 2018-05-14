@@ -1,0 +1,9 @@
+noinst_LTLIBRARIES = ctdist.la
+
+ctdist_la_CPPFLAGS = -I$(top_srcdir)/src -I$(includedir)/JAGS
+
+ctdist_la_LDFLAGS = -no-undefined -module -avoid-version
+
+ctdist_la_SOURCES = DCT.cc
+
+noinst_HEADERS = DCT.h
